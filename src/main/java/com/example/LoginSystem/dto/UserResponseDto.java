@@ -1,8 +1,10 @@
 package com.example.LoginSystem.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.sql.Timestamp;
 
-public class UserResponseDto
+public class UserResponseDto extends RepresentationModel
 {
     private Long id;
     private String email;

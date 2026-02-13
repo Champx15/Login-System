@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @org.springframework.web.bind.annotation.RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserNotFoundExcpetion.class)
-    public ResponseEntity<ErrorDetails> userNotFound(UserNotFoundExcpetion unfe){
-        ErrorDetails notFound = new ErrorDetails(unfe.getMessage(), 404, "Not Found");
-        return new ResponseEntity<>(notFound,HttpStatus.NOT_FOUND);
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorDetails> userNotFound(UserNotFoundException unfe){
+        ErrorDetails notFound = new ErrorDetails(unfe.getMessage(), 401, "Unauthorized");
+        return new ResponseEntity<>(notFound,HttpStatus.UNAUTHORIZED);
     }
 }

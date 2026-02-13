@@ -1,10 +1,9 @@
 package com.example.LoginSystem.service;
 
-import com.example.LoginSystem.dto.UserLoginDto;
 import com.example.LoginSystem.dto.UserRequestDto;
 import com.example.LoginSystem.dto.UserResponseDto;
 import com.example.LoginSystem.dto.mapper.UserDtoMapper;
-import com.example.LoginSystem.exception.UserNotFoundExcpetion;
+import com.example.LoginSystem.exception.UserNotFoundException;
 import com.example.LoginSystem.phashing.PWordHasher;
 import com.example.LoginSystem.model.User;
 import com.example.LoginSystem.repo.LoginRepo;
@@ -28,9 +27,11 @@ public class LoginService implements ILoginService{
     }
 
     @Override
-    public UserResponseDto validateAccount(UserRequestDto requestDto){
-        UserLoginDto loginDto = repo.findByEmail(requestDto.getEmail());
-        String unhashed = PWordHasher.decode(loginDto.getPassword());
-        boolean matching = unhashed.equals(requestDto);
+    public UserResponseDto validateAccount(UserRequestDto requestDto) throws UserNotFoundException{
+        User user = repo.findByEmail(requestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+        String unhashed = PWordHasher.decode(user.getPassword());
+        boolean matching = unhashed.equals(requestDto.getPassword());
+        if(!matching) throw new UserNotFoundException();
+        return  mapper.toDto(user);
     }
 }
